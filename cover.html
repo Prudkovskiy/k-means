@@ -54,7 +54,9 @@
 			<div id="nav">
 				<select id="files">
 				
-				<option value="file0">k-means\main.go (100.0%)</option>
+				<option value="file0">k-medoids\example.go (0.0%)</option>
+				
+				<option value="file1">k-medoids\main.go (90.9%)</option>
 				
 				</select>
 			</div>
@@ -70,12 +72,148 @@
 		
 		<pre class="file" id="file0" style="display: none">package main
 
-import "fmt"
+import (
+        "fmt"
+        "os"
 
-//Main do smth
-func main() <span class="cov8" title="1">{
-        fmt.Println("Hello, k-means++!")
-}</span>
+        yaml "gopkg.in/yaml.v2"
+)
+
+func main() <span class="cov0" title="0">{
+        file, err := os.Open("in.txt")
+        if err != nil </span><span class="cov0" title="0">{
+                panic(err)</span>
+        }
+        <span class="cov0" title="0">defer file.Close()
+        // get the file size
+        stat, _ := file.Stat()
+
+        data := make([]byte, stat.Size())
+
+        file.Read(data)
+        // read the file
+        var start int
+        for k, i := range data </span><span class="cov0" title="0">{
+                if i == 10 </span><span class="cov0" title="0">{
+                        start = k
+                        break</span>
+                }
+        }
+        <span class="cov0" title="0">fmt.Println(string(data[:start]))
+        var allinfo []map[int](map[int]int)
+
+        // информация из файла в формате yaml
+        err = yaml.Unmarshal(data[start:], &amp;allinfo)
+        if err != nil </span><span class="cov0" title="0">{
+                panic(err)</span>
+        }
+
+        <span class="cov0" title="0">n := len(allinfo) // размер матрицы смежности
+        var matr [][]int
+
+        for i := 0; i &lt; n; i++ </span><span class="cov0" title="0">{
+                matr = append(matr, []int{})
+                for j := 0; j &lt; n; j++ </span><span class="cov0" title="0">{
+                        matr[i] = append(matr[i], 0)
+                }</span>
+        }
+        <span class="cov0" title="0">fmt.Println(matr)
+
+        for _, adjacency := range allinfo </span><span class="cov0" title="0">{
+                for node, spisok := range adjacency </span><span class="cov0" title="0">{
+                        for friendnode, weight := range spisok </span><span class="cov0" title="0">{
+                                matr[node-1][friendnode-1] = weight
+                        }</span>
+                }
+        }
+
+        <span class="cov0" title="0">fmt.Println(matr)</span>
+}
+</pre>
+		
+		<pre class="file" id="file1" style="display: none">package main
+
+import (
+        "fmt"
+        "os"
+        "strconv"
+
+        "gopkg.in/yaml.v2"
+)
+
+type FileReader struct {
+        FileName string
+        Matrix   [][]int
+        Kmax     int
+}
+
+func (r *FileReader) Read() ([]byte, error) <span class="cov8" title="1">{
+        file, err := os.Open(r.FileName)
+        if err != nil </span><span class="cov0" title="0">{
+                return nil, err
+        }</span>
+        <span class="cov8" title="1">defer file.Close()
+        // get the file size
+        stat, _ := file.Stat()
+        // read the file
+        data := make([]byte, stat.Size())
+        file.Read(data)
+        return data, err</span>
+}
+
+// распаковываем содержимое файла в матрицу смежности
+func (r *FileReader) Unpack(data []byte) error <span class="cov8" title="1">{
+        // доходим до конца первой строки
+        var start int
+        for k, i := range data </span><span class="cov8" title="1">{
+                if i == 10 </span><span class="cov8" title="1">{
+                        start = k
+                        break</span>
+                }
+        }
+        // инициализируем границу кластеризации первой строкой файла
+        <span class="cov8" title="1">k, err := strconv.Atoi(string(data[:start-1]))
+        if err != nil </span><span class="cov0" title="0">{
+                return err
+        }</span>
+        <span class="cov8" title="1">r.Kmax = k
+
+        // достаем списки смежности из файла в формате yaml
+        var allinfo []map[int](map[int]int)
+        err = yaml.Unmarshal(data[start:], &amp;allinfo)
+        if err != nil </span><span class="cov0" title="0">{
+                return err
+        }</span>
+
+        <span class="cov8" title="1">n := len(allinfo) // размер матрицы смежности
+        // заполняем ее нулями
+        for i := 0; i &lt; n; i++ </span><span class="cov8" title="1">{
+                r.Matrix = append(r.Matrix, []int{})
+                for j := 0; j &lt; n; j++ </span><span class="cov8" title="1">{
+                        r.Matrix[i] = append(r.Matrix[i], 0)
+                }</span>
+        }
+        // дополняем весами ребер
+        <span class="cov8" title="1">for _, adjacency := range allinfo </span><span class="cov8" title="1">{
+                for node, spisok := range adjacency </span><span class="cov8" title="1">{
+                        for friendnode, weight := range spisok </span><span class="cov8" title="1">{
+                                r.Matrix[node-1][friendnode-1] = weight
+                        }</span>
+                }
+        }
+        <span class="cov8" title="1">fmt.Println(r.Matrix)
+        fmt.Println(r.Matrix)
+        return err</span>
+}
+
+// func main() {
+//         k := new(FileReader)
+//         k.FileName = "in.txt"
+//         b, err := k.Read()
+//         err = k.Unpack(b)
+
+//         fmt.Println(err, k.Matrix)
+// }
 </pre>
 		
 		</div>

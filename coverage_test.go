@@ -5,7 +5,16 @@ import (
 )
 
 func TestMain(t *testing.T) {
-	main()
+	k := new(FileReader)
+	k.FileName = "in.txt"
+	b, err := k.Read()
+	if err != nil {
+		t.Errorf("unexpected error ", err)
+	}
+	err = k.Unpack(b)
+	if err != nil {
+		t.Errorf("unexpected error ", err)
+	}
 }
 
 /*
