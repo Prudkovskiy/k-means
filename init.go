@@ -1,18 +1,21 @@
 package main
 
 import (
+	"math"
 	"os"
 	"strconv"
 
 	"gopkg.in/yaml.v2"
 )
 
+// FileReader работает с файлом входных данных
 type FileReader struct {
 	FileName string
-	Matrix   [][]int
-	Kmax     int
+	Matrix   [][]float64 // матрица смежности
+	Kmax     int         // верхняя граница кластеризации
 }
 
+// Read считывает данные из файла
 func (r *FileReader) Read() ([]byte, error) {
 	file, err := os.Open(r.FileName)
 	if err != nil {
@@ -27,7 +30,7 @@ func (r *FileReader) Read() ([]byte, error) {
 	return data, err
 }
 
-// распаковываем содержимое файла в матрицу смежности
+// Unpack распаковывает содержимое файла в матрицу смежности и Kmax
 func (r *FileReader) Unpack(data []byte) error {
 	// доходим до конца первой строки
 	var start int
@@ -45,21 +48,30 @@ func (r *FileReader) Unpack(data []byte) error {
 	r.Kmax = k
 
 	// достаем списки смежности из файла в формате yaml
-	var allinfo []map[int](map[int]int)
+	var allinfo []map[int](map[int]float64)
 	err = yaml.Unmarshal(data[start:], &allinfo)
 	if err != nil {
 		return err
 	}
 
-	n := len(allinfo) // размер матрицы смежности
-	// заполняем ее нулями
+	// выделяем место под матрицу смежности n*n
+	n := len(allinfo)
+	r.Matrix = make([][]float64, n)
 	for i := 0; i < n; i++ {
-		r.Matrix = append(r.Matrix, []int{})
+		r.Matrix[i] = make([]float64, n)
+	}
+
+	for i := 0; i < n; i++ {
 		for j := 0; j < n; j++ {
-			r.Matrix[i] = append(r.Matrix[i], 0)
+			if i != j {
+				r.Matrix[i][j] = math.Inf(1)
+			} else {
+				r.Matrix[i][j] = 0
+			}
 		}
 	}
-	// дополняем весами ребер
+
+	// дополняем ее весами ребер
 	for _, adjacency := range allinfo {
 		for node, spisok := range adjacency {
 			for friendnode, weight := range spisok {
@@ -70,12 +82,3 @@ func (r *FileReader) Unpack(data []byte) error {
 
 	return err
 }
-
-// func main() {
-// 	k := new(FileReader)
-// 	k.FileName = "in.txt"
-// 	b, err := k.Read()
-// 	err = k.Unpack(b)
-
-// 	fmt.Println(err, k.Matrix)
-// }
