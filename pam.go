@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"math"
 	"math/rand"
 	"sync"
@@ -69,12 +68,12 @@ func (p *PAM) swap(k int) []int {
 				isMedoid = true
 			}
 		}
-		if !isMedoid { // если вершина не является медоидом, то добавляем ее в немедоиды
+		// если вершина не является медоидом, то добавляем ее в немедоиды
+		if !isMedoid {
 			notMedoids[idx] = i
 			idx++
 		}
 	}
-	// fmt.Println("медоиды ", medoids, " немедоиды ", notMedoids)
 
 	optimalMedoids := medoids
 	_, optimalMin, _ := p.clustering(optimalMedoids)
@@ -82,7 +81,6 @@ func (p *PAM) swap(k int) []int {
 	// main PAM loop - O(number_of_iterations*k*n*(k*n))
 	stop := false // условие останова
 	for !stop {
-		fmt.Println(optimalMedoids)
 		// O(k*n*(k*n))
 		for medIdx, medoid := range optimalMedoids {
 			ch := make(chan map[float64][]int, len(notMedoids))
@@ -101,27 +99,26 @@ func (p *PAM) swap(k int) []int {
 					inf := []int{notMedIdx, notMed, med}
 					var inform = map[float64][]int{sum: inf}
 					out <- inform
-					// close(out)
 					// fmt.Println("go finish, chan: ", out, "wight_function", sum)
 				}(ch, notMedIdx, notMedoid, medoid)
 			}
 			wg.Wait()
 			close(ch)
-			// находим тот медоид и немедоид, с которым целевая функция максимально уменьшилась
-			var notMedId, changeNotMed, changeMed = -1, -1, -1
+			// находим те медоид/немедоид, с которым целевая функция максимально уменьшилась
+			var notMedIdx, changeNotMed, changeMed = -1, -1, -1
 			for inform := range ch {
 				for mins, inf := range inform {
 					if mins < iterMin {
 						iterMin = mins
-						notMedId = inf[0]
+						notMedIdx = inf[0]
 						changeNotMed = inf[1]
 						changeMed = inf[2]
 					}
 				}
 			}
-			if notMedId != -1 {
+			if notMedIdx != -1 {
 				optimalMedoids[medIdx] = changeNotMed
-				notMedoids[notMedId] = changeMed
+				notMedoids[notMedIdx] = changeMed
 			}
 		}
 		_, currMin, _ := p.clustering(optimalMedoids)
