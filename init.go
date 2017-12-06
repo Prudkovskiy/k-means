@@ -10,9 +10,10 @@ import (
 
 // FileReader работает с файлом входных данных
 type FileReader struct {
-	FileName string
-	Matrix   [][]float64 // матрица смежности
-	Kmax     int         // верхняя граница кластеризации
+	FileName    string
+	FileNameOut string
+	Matrix      [][]float64 // матрица смежности
+	Kmax        int         // верхняя граница кластеризации
 }
 
 // Read считывает данные из файла
@@ -27,6 +28,26 @@ func (r *FileReader) Read() ([]byte, error) {
 	// read the file
 	data := make([]byte, stat.Size())
 	file.Read(data)
+
+	return data, err
+}
+
+func (r *FileReader) Write(data []byte) error {
+	file, err := os.Create(r.FileNameOut)
+	if err != nil {
+		return err
+	}
+	defer file.Close()
+	file.Write(data)
+	return err
+}
+
+// Pack запаковывает пришедшую мапу кластеров в слайс байт
+func (r *FileReader) Pack(clust map[int][]int) ([]byte, error) {
+	data, err := yaml.Marshal(clust)
+	if err != nil {
+		return nil, err
+	}
 	return data, err
 }
 
