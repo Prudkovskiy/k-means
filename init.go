@@ -3,6 +3,7 @@ package main
 import (
 	"math"
 	"os"
+	"sort"
 	"strconv"
 
 	"gopkg.in/yaml.v2"
@@ -29,7 +30,7 @@ func (r *FileReader) Read() ([]byte, error) {
 	data := make([]byte, stat.Size())
 	file.Read(data)
 
-	return data, err
+	return data, nil
 }
 
 func (r *FileReader) Write(data []byte) error {
@@ -43,12 +44,31 @@ func (r *FileReader) Write(data []byte) error {
 }
 
 // Pack запаковывает пришедшую мапу кластеров в слайс байт
-func (r *FileReader) Pack(clust map[int][]int) ([]byte, error) {
-	data, err := yaml.Marshal(clust)
-	if err != nil {
-		return nil, err
+// при этом он сортирует ее по ключам
+func (r *FileReader) Pack(clusters map[int][]int) []byte {
+
+	sortedKeys := make([]int, len(clusters)) // O(Kmax)
+	i := 0
+	for key := range clusters {
+		sortedKeys[i] = key
+		i++
 	}
-	return data, err
+	sort.Slice(sortedKeys, func(i, j int) bool { return sortedKeys[i] < sortedKeys[j] })
+
+	// Создаем однозначное представление кластеров
+	// для сравнения ожидание/реальность в тестах
+	visualClust := make(map[int][]int, len(clusters))
+	i = 1
+	for _, key := range sortedKeys {
+		visualClust[i] = make([]int, 0, len(clusters[key]))
+		for _, node := range clusters[key] {
+			visualClust[i] = append(visualClust[i], node+1)
+		}
+		i++
+	}
+
+	data, _ := yaml.Marshal(visualClust)
+	return data
 }
 
 // Unpack распаковывает содержимое файла в матрицу смежности и Kmax
@@ -101,5 +121,5 @@ func (r *FileReader) Unpack(data []byte) error {
 		}
 	}
 
-	return err
+	return nil
 }
