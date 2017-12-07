@@ -56,11 +56,11 @@
 				
 				<option value="file0">PAM\example.go (0.0%)</option>
 				
-				<option value="file1">PAM\floyd_warshall.go (0.0%)</option>
+				<option value="file1">PAM\floyd_warshall.go (100.0%)</option>
 				
-				<option value="file2">PAM\init.go (73.3%)</option>
+				<option value="file2">PAM\init.go (100.0%)</option>
 				
-				<option value="file3">PAM\pam.go (0.0%)</option>
+				<option value="file3">PAM\pam.go (100.0%)</option>
 				
 				</select>
 			</div>
@@ -76,12 +76,14 @@
 		
 		<pre class="file" id="file0" style="display: none">package main
 
-import "fmt"
+import (
+        "os"
+)
 
 func main() <span class="cov0" title="0">{
         reader := new(FileReader)
-        reader.FileNameIn = "./test_data/in100500.txt"
-        reader.FileNameOut = "./test_data/out2.txt"
+        reader.FileNameIn = string(os.Args[1])  // входной файл
+        reader.FileNameOut = string(os.Args[2]) // выходной файл
         bytes, _ := reader.Read()
         reader.Unpack(bytes)
 
@@ -92,83 +94,71 @@ func main() <span class="cov0" title="0">{
         pam.Kmax = reader.Kmax
         pam.Distances = matr
 
-        clust, ff := pam.swap(1)
-        visuality := make(map[int][]int, len(clust))
-        i := 1
-        for _, val := range clust </span><span class="cov0" title="0">{
-                visuality[i] = make([]int, 0, len(val))
-                for _, node := range val </span><span class="cov0" title="0">{
-                        visuality[i] = append(visuality[i], node+1)
-                }</span>
-                <span class="cov0" title="0">i++</span>
-        }
-        <span class="cov0" title="0">fmt.Println(visuality, ff)
+        // clust, ff := pam.swap(1)
+        // visuality := make(map[int][]int, len(clust))
+        // i := 1
+        // for _, val := range clust {
+        //         visuality[i] = make([]int, 0, len(val))
+        //         for _, node := range val {
+        //                 visuality[i] = append(visuality[i], node+1)
+        //         }
+        //         i++
+        // }
+        // fmt.Println(visuality, ff)
 
-        clust, ff = pam.swap(2)
-        visuality = make(map[int][]int, len(clust))
-        i = 1
-        for _, val := range clust </span><span class="cov0" title="0">{
-                visuality[i] = make([]int, 0, len(val))
-                for _, node := range val </span><span class="cov0" title="0">{
-                        visuality[i] = append(visuality[i], node+1)
-                }</span>
-                <span class="cov0" title="0">i++</span>
-        }
-        <span class="cov0" title="0">fmt.Println(visuality, ff)
+        // clust, ff = pam.swap(2)
+        // visuality = make(map[int][]int, len(clust))
+        // i = 1
+        // for _, val := range clust {
+        //         visuality[i] = make([]int, 0, len(val))
+        //         for _, node := range val {
+        //                 visuality[i] = append(visuality[i], node+1)
+        //         }
+        //         i++
+        // }
+        // fmt.Println(visuality, ff)
 
-        clust, ff = pam.swap(3)
-        visuality = make(map[int][]int, len(clust))
-        i = 1
-        for _, val := range clust </span><span class="cov0" title="0">{
-                visuality[i] = make([]int, 0, len(val))
-                for _, node := range val </span><span class="cov0" title="0">{
-                        visuality[i] = append(visuality[i], node+1)
-                }</span>
-                <span class="cov0" title="0">i++</span>
-        }
-        <span class="cov0" title="0">fmt.Println(visuality, ff)
+        // clust, ff = pam.swap(3)
+        // visuality = make(map[int][]int, len(clust))
+        // i = 1
+        // for _, val := range clust {
+        //         visuality[i] = make([]int, 0, len(val))
+        //         for _, node := range val {
+        //                 visuality[i] = append(visuality[i], node+1)
+        //         }
+        //         i++
+        // }
+        // fmt.Println(visuality, ff)
 
-        clust, ff = pam.swap(4)
-        visuality = make(map[int][]int, len(clust))
-        i = 1
-        for _, val := range clust </span><span class="cov0" title="0">{
-                visuality[i] = make([]int, 0, len(val))
-                for _, node := range val </span><span class="cov0" title="0">{
-                        visuality[i] = append(visuality[i], node+1)
-                }</span>
-                <span class="cov0" title="0">i++</span>
-        }
-        <span class="cov0" title="0">fmt.Println(visuality, ff)
+        // clust, ff = pam.swap(4)
+        // visuality = make(map[int][]int, len(clust))
+        // i = 1
+        // for _, val := range clust {
+        //         visuality[i] = make([]int, 0, len(val))
+        //         for _, node := range val {
+        //                 visuality[i] = append(visuality[i], node+1)
+        //         }
+        //         i++
+        // }
+        // fmt.Println(visuality, ff)
 
-        clust, ff = pam.swap(5)
-        visuality = make(map[int][]int, len(clust))
-        i = 1
-        for _, val := range clust </span><span class="cov0" title="0">{
-                visuality[i] = make([]int, 0, len(val))
-                for _, node := range val </span><span class="cov0" title="0">{
-                        visuality[i] = append(visuality[i], node+1)
-                }</span>
-                <span class="cov0" title="0">i++</span>
-        }
-        <span class="cov0" title="0">fmt.Println(visuality, ff)
+        // clust, ff = pam.swap(5)
+        // visuality = make(map[int][]int, len(clust))
+        // i = 1
+        // for _, val := range clust {
+        //         visuality[i] = make([]int, 0, len(val))
+        //         for _, node := range val {
+        //                 visuality[i] = append(visuality[i], node+1)
+        //         }
+        //         i++
+        // }
+        // fmt.Println(visuality, ff)
 
-        clusters, weightFunction := pam.RunPAM()
-        visuality = make(map[int][]int, len(clusters))
-        i = 1
-        for _, val := range clusters </span><span class="cov0" title="0">{
-                visuality[i] = make([]int, 0, len(val))
-                for _, node := range val </span><span class="cov0" title="0">{
-                        visuality[i] = append(visuality[i], node+1)
-                }</span>
-                <span class="cov0" title="0">i++</span>
-        }
-        <span class="cov0" title="0">data, err := reader.Pack(visuality)
-        if err != nil </span><span class="cov0" title="0">{
-                panic(err)</span>
-        }
-        <span class="cov0" title="0">reader.Write(data)
-        fmt.Println("\n", visuality, weightFunction)</span>
-}
+        clusters, _ := pam.RunPAM()
+        data := reader.Pack(clusters)
+        reader.Write(data)
+        // fmt.Println("\n", visuality, weightFunction)
+}</span>
 </pre>
 		
 		<pre class="file" id="file1" style="display: none">package main
@@ -183,55 +173,55 @@ type FloydWarshall struct {
 }
 
 // Run - поиска кротчайших путей
-func (r *FloydWarshall) Run(matrix [][]float64) ([][]float64, error) <span class="cov0" title="0">{
+func (r *FloydWarshall) Run(matrix [][]float64) ([][]float64, error) <span class="cov8" title="1">{
         n := len(matrix)
         m := len(matrix[0])
-        if n != m </span><span class="cov0" title="0">{
+        if n != m </span><span class="cov8" title="1">{
                 return nil, fmt.Errorf("bad news: n != m")
         }</span>
 
         //
-        <span class="cov0" title="0">r.shortest = make([][][]float64, n+1)
-        for i := 0; i &lt; n+1; i++ </span><span class="cov0" title="0">{
+        <span class="cov8" title="1">r.shortest = make([][][]float64, n+1)
+        for i := 0; i &lt; n+1; i++ </span><span class="cov8" title="1">{
                 r.shortest[i] = make([][]float64, n+1)
-                for j := 0; j &lt; n+1; j++ </span><span class="cov0" title="0">{
+                for j := 0; j &lt; n+1; j++ </span><span class="cov8" title="1">{
                         r.shortest[i][j] = make([]float64, n+1)
                 }</span>
         }
 
         //
-        <span class="cov0" title="0">for i := 1; i &lt; n+1; i++ </span><span class="cov0" title="0">{
-                for j := 1; j &lt; n+1; j++ </span><span class="cov0" title="0">{
+        <span class="cov8" title="1">for i := 1; i &lt; n+1; i++ </span><span class="cov8" title="1">{
+                for j := 1; j &lt; n+1; j++ </span><span class="cov8" title="1">{
                         r.shortest[0][i][j] = matrix[i-1][j-1]
                 }</span>
         }
         // fmt.Println(r.shortest[0])
 
         // O(n^3) time
-        <span class="cov0" title="0">for x := 1; x &lt; n+1; x++ </span><span class="cov0" title="0">{
-                for u := 1; u &lt; n+1; u++ </span><span class="cov0" title="0">{
-                        for v := 1; v &lt; n+1; v++ </span><span class="cov0" title="0">{
+        <span class="cov8" title="1">for x := 1; x &lt; n+1; x++ </span><span class="cov8" title="1">{
+                for u := 1; u &lt; n+1; u++ </span><span class="cov8" title="1">{
+                        for v := 1; v &lt; n+1; v++ </span><span class="cov8" title="1">{
                                 cur := &amp;r.shortest[x][u][v]
                                 pred := r.shortest[x-1][u][v]
                                 shortUX := r.shortest[x-1][u][x]
                                 shortXV := r.shortest[x-1][x][v]
 
-                                if pred &lt; shortUX+shortXV </span><span class="cov0" title="0">{
+                                if pred &lt; shortUX+shortXV </span><span class="cov8" title="1">{
                                         *cur = pred
-                                }</span><span class="cov0" title="0"> else {
+                                }</span><span class="cov8" title="1"> else {
                                         *cur = shortUX + shortXV
                                 }</span>
                         }
                 }
         }
 
-        <span class="cov0" title="0">for i := 0; i &lt; n; i++ </span><span class="cov0" title="0">{
-                for j := 0; j &lt; n; j++ </span><span class="cov0" title="0">{
+        <span class="cov8" title="1">for i := 0; i &lt; n; i++ </span><span class="cov8" title="1">{
+                for j := 0; j &lt; n; j++ </span><span class="cov8" title="1">{
                         matrix[i][j] = r.shortest[n][i+1][j+1]
                 }</span>
         }
 
-        <span class="cov0" title="0">return matrix, nil</span>
+        <span class="cov8" title="1">return matrix, nil</span>
 }
 </pre>
 		
@@ -240,6 +230,7 @@ func (r *FloydWarshall) Run(matrix [][]float64) ([][]float64, error) <span class
 import (
         "math"
         "os"
+        "sort"
         "strconv"
 
         "gopkg.in/yaml.v2"
@@ -266,26 +257,45 @@ func (r *FileReader) Read() ([]byte, error) <span class="cov8" title="1">{
         data := make([]byte, stat.Size())
         file.Read(data)
 
-        return data, err</span>
+        return data, nil</span>
 }
 
-func (r *FileReader) Write(data []byte) error <span class="cov0" title="0">{
+func (r *FileReader) Write(data []byte) error <span class="cov8" title="1">{
         file, err := os.Create(r.FileNameOut)
-        if err != nil </span><span class="cov0" title="0">{
+        if err != nil </span><span class="cov8" title="1">{
                 return err
         }</span>
-        <span class="cov0" title="0">defer file.Close()
+        <span class="cov8" title="1">defer file.Close()
         file.Write(data)
         return err</span>
 }
 
 // Pack запаковывает пришедшую мапу кластеров в слайс байт
-func (r *FileReader) Pack(clust map[int][]int) ([]byte, error) <span class="cov0" title="0">{
-        data, err := yaml.Marshal(clust)
-        if err != nil </span><span class="cov0" title="0">{
-                return nil, err
+// при этом он сортирует ее по ключам
+func (r *FileReader) Pack(clusters map[int][]int) []byte <span class="cov8" title="1">{
+
+        sortedKeys := make([]int, len(clusters)) // O(Kmax)
+        i := 0
+        for key := range clusters </span><span class="cov8" title="1">{
+                sortedKeys[i] = key
+                i++
         }</span>
-        <span class="cov0" title="0">return data, err</span>
+        <span class="cov8" title="1">sort.Slice(sortedKeys, func(i, j int) bool </span><span class="cov8" title="1">{ return sortedKeys[i] &lt; sortedKeys[j] }</span>)
+
+        // Создаем однозначное представление кластеров
+        // для сравнения ожидание/реальность в тестах
+        <span class="cov8" title="1">visualClust := make(map[int][]int, len(clusters))
+        i = 1
+        for _, key := range sortedKeys </span><span class="cov8" title="1">{
+                visualClust[i] = make([]int, 0, len(clusters[key]))
+                for _, node := range clusters[key] </span><span class="cov8" title="1">{
+                        visualClust[i] = append(visualClust[i], node+1)
+                }</span>
+                <span class="cov8" title="1">i++</span>
+        }
+
+        <span class="cov8" title="1">data, _ := yaml.Marshal(visualClust)
+        return data</span>
 }
 
 // Unpack распаковывает содержимое файла в матрицу смежности и Kmax
@@ -300,7 +310,7 @@ func (r *FileReader) Unpack(data []byte) error <span class="cov8" title="1">{
         }
         // инициализируем границу кластеризации первой строкой файла
         <span class="cov8" title="1">k, err := strconv.Atoi(string(data[:start-1]))
-        if err != nil </span><span class="cov0" title="0">{
+        if err != nil </span><span class="cov8" title="1">{
                 return err
         }</span>
         <span class="cov8" title="1">r.Kmax = k
@@ -308,7 +318,7 @@ func (r *FileReader) Unpack(data []byte) error <span class="cov8" title="1">{
         // достаем списки смежности из файла в формате yaml
         var allinfo []map[int](map[int]float64)
         err = yaml.Unmarshal(data[start:], &amp;allinfo)
-        if err != nil </span><span class="cov0" title="0">{
+        if err != nil </span><span class="cov8" title="1">{
                 return err
         }</span>
 
@@ -338,7 +348,7 @@ func (r *FileReader) Unpack(data []byte) error <span class="cov8" title="1">{
                 }
         }
 
-        <span class="cov8" title="1">return err</span>
+        <span class="cov8" title="1">return nil</span>
 }
 </pre>
 		
@@ -359,7 +369,7 @@ type PAM struct {
 
 // O(n*k),
 // where k - number of clusters, n - number of nodes in graph
-func (p *PAM) clustering(medoids []int) (map[int][]int, float64, int) <span class="cov0" title="0">{
+func (p *PAM) clustering(medoids []int) (map[int][]int, float64, int) <span class="cov8" title="1">{
         var f float64 // целевая функция (сумма кротчайших расстояний "медоид-не медоид")
 
         // эти переменные нужны для фазы build,
@@ -370,35 +380,35 @@ func (p *PAM) clustering(medoids []int) (map[int][]int, float64, int) <span clas
         n := len(p.Distances)
         k := len(medoids)
         clusters := make(map[int][]int, k)
-        for _, i := range medoids </span><span class="cov0" title="0">{
+        for _, i := range medoids </span><span class="cov8" title="1">{
                 clusters[i] = append(clusters[i], i)
         }</span>
 
-        <span class="cov0" title="0">for node := 0; node &lt; n; node++ </span><span class="cov0" title="0">{
+        <span class="cov8" title="1">for node := 0; node &lt; n; node++ </span><span class="cov8" title="1">{
                 min := math.Inf(1)
                 medoid := -1
                 _, ok := clusters[node] // проверяем, является ли node медоидом
-                if !ok </span><span class="cov0" title="0">{
-                        for _, currMedoid := range medoids </span><span class="cov0" title="0">{
-                                if p.Distances[node][currMedoid] &lt; min </span><span class="cov0" title="0">{
+                if !ok </span><span class="cov8" title="1">{
+                        for _, currMedoid := range medoids </span><span class="cov8" title="1">{
+                                if p.Distances[node][currMedoid] &lt; min </span><span class="cov8" title="1">{
                                         min = p.Distances[node][currMedoid]
                                         medoid = currMedoid
                                 }</span>
                         }
-                        <span class="cov0" title="0">clusters[medoid] = append(clusters[medoid], node)
+                        <span class="cov8" title="1">clusters[medoid] = append(clusters[medoid], node)
                         f += min
 
-                        if min &gt; max </span><span class="cov0" title="0">{
+                        if min &gt; max </span><span class="cov8" title="1">{
                                 max = min
                                 nextMedoid = node
                         }</span>
                 }
         }
-        <span class="cov0" title="0">return clusters, f, nextMedoid</span>
+        <span class="cov8" title="1">return clusters, f, nextMedoid</span>
 }
 
 // O(k*k*n)
-func (p *PAM) build(k int) []int <span class="cov0" title="0">{
+func (p *PAM) build(k int) []int <span class="cov8" title="1">{
         n := len(p.Distances)
         medoids := make([]int, 0, k) // len = 0, capacity = k
         // произвольно выбираем вершну в качестве первого медоида
@@ -406,57 +416,57 @@ func (p *PAM) build(k int) []int <span class="cov0" title="0">{
         medoids = append(medoids, rand.Intn(n))
 
         // найдем оставшиеся k-1 медоидов
-        for i := 1; i &lt; k; i++ </span><span class="cov0" title="0">{
+        for i := 1; i &lt; k; i++ </span><span class="cov8" title="1">{
                 _, _, newMedoid := p.clustering(medoids)
                 medoids = append(medoids, newMedoid)
         }</span>
-        <span class="cov0" title="0">p.clustering(medoids)
+        <span class="cov8" title="1">p.clustering(medoids)
 
         return medoids</span>
 }
 
 // O(number_of_iterations*k*n*(k*n))
-func (p *PAM) swap(k int) (map[int][]int, float64) <span class="cov0" title="0">{
+func (p *PAM) swap(k int) (map[int][]int, float64) <span class="cov8" title="1">{
         n := len(p.Distances)
         medoids := p.build(k)
         notMedoids := make([]int, n-k)
 
         var idx int
         // O(n*k)
-        for i := 0; i &lt; n; i++ </span><span class="cov0" title="0">{
+        for i := 0; i &lt; n; i++ </span><span class="cov8" title="1">{
                 // проверка является ли вершина i медоидом
                 isMedoid := false
-                for _, medoid := range medoids </span><span class="cov0" title="0">{ // O(k)
-                        if i == medoid </span><span class="cov0" title="0">{
+                for _, medoid := range medoids </span><span class="cov8" title="1">{ // O(k)
+                        if i == medoid </span><span class="cov8" title="1">{
                                 isMedoid = true
                         }</span>
                 }
                 // если вершина не является медоидом, то добавляем ее в немедоиды
-                <span class="cov0" title="0">if !isMedoid </span><span class="cov0" title="0">{
+                <span class="cov8" title="1">if !isMedoid </span><span class="cov8" title="1">{
                         notMedoids[idx] = i
                         idx++
                 }</span>
         }
 
-        <span class="cov0" title="0">optimalMedoids := medoids
+        <span class="cov8" title="1">optimalMedoids := medoids
         _, optimalMin, _ := p.clustering(optimalMedoids)
 
         // main PAM loop - O(number_of_iterations*k*n*(k*n))
         stop := false // условие останова
-        for !stop </span><span class="cov0" title="0">{
+        for !stop </span><span class="cov8" title="1">{
                 // O(k*n*(k*n))
-                for medIdx, medoid := range optimalMedoids </span><span class="cov0" title="0">{
+                for medIdx, medoid := range optimalMedoids </span><span class="cov8" title="1">{
                         ch := make(chan map[float64][]int, len(notMedoids))
                         wg := &amp;sync.WaitGroup{}
                         _, iterMin, _ := p.clustering(optimalMedoids) // значение целевой функции на данной итерации
 
-                        for notMedIdx, notMedoid := range notMedoids </span><span class="cov0" title="0">{
+                        for notMedIdx, notMedoid := range notMedoids </span><span class="cov8" title="1">{
                                 newMedoids := make([]int, k)
                                 copy(newMedoids, optimalMedoids)
                                 newMedoids[medIdx] = notMedoid
 
                                 wg.Add(1)
-                                go func(out chan&lt;- map[float64][]int, notMedIdx, notMed, med int) </span><span class="cov0" title="0">{
+                                go func(out chan&lt;- map[float64][]int, notMedIdx, notMed, med int) </span><span class="cov8" title="1">{
                                         defer wg.Done()
                                         _, sum, _ := p.clustering(newMedoids)
                                         inf := []int{notMedIdx, notMed, med}
@@ -465,13 +475,13 @@ func (p *PAM) swap(k int) (map[int][]int, float64) <span class="cov0" title="0">
                                         // fmt.Println("go finish, chan: ", out, "wight_function", sum)
                                 }</span>(ch, notMedIdx, notMedoid, medoid)
                         }
-                        <span class="cov0" title="0">wg.Wait()
+                        <span class="cov8" title="1">wg.Wait()
                         close(ch)
                         // находим те медоид/немедоид, с которым целевая функция максимально уменьшилась
                         var notMedIdx, changeNotMed, changeMed = -1, -1, -1
-                        for inform := range ch </span><span class="cov0" title="0">{
-                                for mins, inf := range inform </span><span class="cov0" title="0">{
-                                        if mins &lt; iterMin </span><span class="cov0" title="0">{
+                        for inform := range ch </span><span class="cov8" title="1">{
+                                for mins, inf := range inform </span><span class="cov8" title="1">{
+                                        if mins &lt; iterMin </span><span class="cov8" title="1">{
                                                 iterMin = mins
                                                 notMedIdx = inf[0]
                                                 changeNotMed = inf[1]
@@ -479,19 +489,19 @@ func (p *PAM) swap(k int) (map[int][]int, float64) <span class="cov0" title="0">
                                         }</span>
                                 }
                         }
-                        <span class="cov0" title="0">if notMedIdx != -1 </span><span class="cov0" title="0">{
+                        <span class="cov8" title="1">if notMedIdx != -1 </span><span class="cov8" title="1">{
                                 optimalMedoids[medIdx] = changeNotMed
                                 notMedoids[notMedIdx] = changeMed
                         }</span>
                 }
-                <span class="cov0" title="0">_, currMin, _ := p.clustering(optimalMedoids)
-                if optimalMin == currMin </span><span class="cov0" title="0">{
+                <span class="cov8" title="1">_, currMin, _ := p.clustering(optimalMedoids)
+                if optimalMin == currMin </span><span class="cov8" title="1">{
                         stop = true
-                }</span><span class="cov0" title="0"> else {
+                }</span><span class="cov8" title="1"> else {
                         optimalMin = currMin
                 }</span>
         }
-        <span class="cov0" title="0">clusters, weightFunc, _ := p.clustering(optimalMedoids)
+        <span class="cov8" title="1">clusters, weightFunc, _ := p.clustering(optimalMedoids)
 
         return clusters, weightFunc</span>
 }
@@ -499,7 +509,7 @@ func (p *PAM) swap(k int) (map[int][]int, float64) <span class="cov0" title="0">
 // RunPAM выбирает оптимальное число кластеров для данной матрицы смежностей
 // и разбивает граф на оптимальное число кластеров
 // O(Kmax*O(swap))
-func (p *PAM) RunPAM() (map[int][]int, float64) <span class="cov0" title="0">{
+func (p *PAM) RunPAM() (map[int][]int, float64) <span class="cov8" title="1">{
         predClusters, predWeightFunc := p.swap(1)
         optimalClusters := predClusters
         optimalWeightFunc := predWeightFunc
@@ -508,19 +518,19 @@ func (p *PAM) RunPAM() (map[int][]int, float64) <span class="cov0" title="0">{
         var nextWeightFunc float64
         var min float64 = 1
 
-        for k := 2; k &lt; p.Kmax; k++ </span><span class="cov0" title="0">{
+        for k := 2; k &lt; p.Kmax; k++ </span><span class="cov8" title="1">{
                 currClusters, currWeightFunc = p.swap(k)
                 _, nextWeightFunc = p.swap(k + 1)
                 optimal := math.Abs(currWeightFunc-nextWeightFunc) /
                         math.Abs(predWeightFunc-currWeightFunc)
-                if optimal &lt; min </span><span class="cov0" title="0">{
+                if optimal &lt; min </span><span class="cov8" title="1">{
                         min = optimal
                         optimalClusters = currClusters
                         optimalWeightFunc = currWeightFunc
                 }</span>
-                <span class="cov0" title="0">predClusters, predWeightFunc = currClusters, currWeightFunc</span>
+                <span class="cov8" title="1">predClusters, predWeightFunc = currClusters, currWeightFunc</span>
         }
-        <span class="cov0" title="0">return optimalClusters, optimalWeightFunc</span>
+        <span class="cov8" title="1">return optimalClusters, optimalWeightFunc</span>
 }
 </pre>
 		
