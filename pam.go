@@ -53,7 +53,26 @@ func (p *PAM) clustering(medoids []int) (map[int][]int, float64, int) {
 	return clusters, f, nextMedoid
 }
 
-func (p *PAM) swap(k int) []int {
+// O(k*k*n)
+func (p *PAM) build(k int) []int {
+	n := len(p.Distances)
+	medoids := make([]int, 0, k) // len = 0, capacity = k
+	// произвольно выбираем вершну в качестве первого медоида
+	rand.Seed(time.Now().UnixNano()) // задаем старт генератора, привязан ко времени
+	medoids = append(medoids, rand.Intn(n))
+
+	// найдем оставшиеся k-1 медоидов
+	for i := 1; i < k; i++ {
+		_, _, newMedoid := p.clustering(medoids)
+		medoids = append(medoids, newMedoid)
+	}
+	p.clustering(medoids)
+
+	return medoids
+}
+
+// O(number_of_iterations*k*n*(k*n))
+func (p *PAM) swap(k int) (map[int][]int, float64) {
 	n := len(p.Distances)
 	medoids := p.build(k)
 	notMedoids := make([]int, n-k)
@@ -128,24 +147,34 @@ func (p *PAM) swap(k int) []int {
 			optimalMin = currMin
 		}
 	}
+	clusters, weightFunc, _ := p.clustering(optimalMedoids)
 
-	return optimalMedoids
+	return clusters, weightFunc
 }
 
-// O(k*k*n)
-func (p *PAM) build(k int) []int {
-	n := len(p.Distances)
-	medoids := make([]int, 0, k) // len = 0, capacity = k
-	// произвольно выбираем вершну в качестве первого медоида
-	rand.Seed(time.Now().UnixNano()) // задаем старт генератора, привязан ко времени
-	medoids = append(medoids, rand.Intn(n))
+// RunPAM выбирает оптимальное число кластеров для данной матрицы смежностей
+// и разбивает граф на оптимальное число кластеров
+// O(Kmax*O(swap))
+func (p *PAM) RunPAM() (map[int][]int, float64) {
+	predClusters, predWeightFunc := p.swap(1)
+	optimalClusters := predClusters
+	optimalWeightFunc := predWeightFunc
+	var currClusters map[int][]int
+	var currWeightFunc float64
+	var nextWeightFunc float64
+	var min float64 = 1
 
-	// найдем оставшиеся k-1 медоидов
-	for i := 1; i < k; i++ {
-		_, _, newMedoid := p.clustering(medoids)
-		medoids = append(medoids, newMedoid)
+	for k := 2; k < p.Kmax; k++ {
+		currClusters, currWeightFunc = p.swap(k)
+		_, nextWeightFunc = p.swap(k + 1)
+		optimal := math.Abs(currWeightFunc-nextWeightFunc) /
+			math.Abs(predWeightFunc-currWeightFunc)
+		if optimal < min {
+			min = optimal
+			optimalClusters = currClusters
+			optimalWeightFunc = currWeightFunc
+		}
+		predClusters, predWeightFunc = currClusters, currWeightFunc
 	}
-	p.clustering(medoids)
-
-	return medoids
+	return optimalClusters, optimalWeightFunc
 }
