@@ -10,7 +10,7 @@ import (
 
 // FileReader работает с файлом входных данных
 type FileReader struct {
-	FileName    string
+	FileNameIn  string
 	FileNameOut string
 	Matrix      [][]float64 // матрица смежности
 	Kmax        int         // верхняя граница кластеризации
@@ -18,7 +18,7 @@ type FileReader struct {
 
 // Read считывает данные из файла
 func (r *FileReader) Read() ([]byte, error) {
-	file, err := os.Open(r.FileName)
+	file, err := os.Open(r.FileNameIn)
 	if err != nil {
 		return nil, err
 	}
