@@ -69,14 +69,6 @@ func TestFloydWarshall(t *testing.T) {
 
 func TestPAM(t *testing.T) {
 	cases := []TestCase{
-		TestCase{"test_data/in.txt", "out.txt",
-			`1:
-- 3
-- 1
-- 2
-- 4
-`,
-		},
 		TestCase{"test_data/in1.txt", "out1.txt",
 			`1:
 - 3
