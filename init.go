@@ -40,7 +40,7 @@ func (r *FileReader) Write(data []byte) error {
 	}
 	defer file.Close()
 	file.Write(data)
-	return err
+	return nil
 }
 
 // Pack запаковывает пришедшую мапу кластеров в слайс байт
@@ -90,14 +90,14 @@ func (r *FileReader) Unpack(data []byte) error {
 	r.Kmax = k
 
 	// достаем списки смежности из файла в формате yaml
-	var allinfo []map[int](map[int]float64)
-	err = yaml.Unmarshal(data[start:], &allinfo)
+	var info []map[int](map[int]float64)
+	err = yaml.Unmarshal(data[start:], &info)
 	if err != nil {
 		return err
 	}
 
 	// выделяем место под матрицу смежности n*n
-	n := len(allinfo)
+	n := len(info)
 	r.Matrix = make([][]float64, n)
 	for i := 0; i < n; i++ {
 		r.Matrix[i] = make([]float64, n)
@@ -114,7 +114,7 @@ func (r *FileReader) Unpack(data []byte) error {
 	}
 
 	// дополняем ее весами ребер
-	for _, adjacency := range allinfo {
+	for _, adjacency := range info {
 		for node, spisok := range adjacency {
 			for friendnode, weight := range spisok {
 				r.Matrix[node-1][friendnode-1] = weight

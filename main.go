@@ -11,19 +11,19 @@ func main() {
 	reader.FileNameOut = string(os.Args[2]) // выходной файл
 	bytes, err := reader.Read()
 	if err != nil {
-		fmt.Println(err)
+		fmt.Println("something go wrong: ", err)
 		return
 	}
 	err = reader.Unpack(bytes)
 	if err != nil {
-		fmt.Println(err)
+		fmt.Println("something go wrong: ", err)
 		return
 	}
 
 	fw := new(FloydWarshall)
 	matr, err := fw.Run(reader.Matrix)
 	if err != nil {
-		fmt.Println(err)
+		fmt.Println("something go wrong: ", err)
 		return
 	}
 
@@ -35,7 +35,7 @@ func main() {
 	data := reader.Pack(clusters)
 	err = reader.Write(data)
 	if err != nil {
-		fmt.Println(err)
+		fmt.Println("something go wrong: ", err)
 		return
 	}
 }

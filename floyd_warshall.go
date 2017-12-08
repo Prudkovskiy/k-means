@@ -15,7 +15,7 @@ func (r *FloydWarshall) Run(matrix [][]float64) ([][]float64, error) {
 	n := len(matrix)
 	m := len(matrix[0])
 	if n != m {
-		return nil, fmt.Errorf("bad news: n != m")
+		return nil, fmt.Errorf("the matrix is not quadratic")
 	}
 
 	// O(n^3) time
