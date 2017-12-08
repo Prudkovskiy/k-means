@@ -4,12 +4,13 @@ import (
 	"fmt"
 )
 
-// FloydWarshall алгоритм Флойда-Уоршелла, поиск кротчайших путей между всеми парами вершин
+// FloydWarshall алгоритм Флойда-Уоршелла,
+// поиск кротчайших путей между всеми парами вершин
 type FloydWarshall struct {
 	shortest [][][]float64
 }
 
-// Run - поиска кротчайших путей
+// Run - процедура поиска кротчайших путей
 func (r *FloydWarshall) Run(matrix [][]float64) ([][]float64, error) {
 	n := len(matrix)
 	m := len(matrix[0])
@@ -17,7 +18,7 @@ func (r *FloydWarshall) Run(matrix [][]float64) ([][]float64, error) {
 		return nil, fmt.Errorf("bad news: n != m")
 	}
 
-	//
+	// O(n^3) time
 	r.shortest = make([][][]float64, n+1)
 	for i := 0; i < n+1; i++ {
 		r.shortest[i] = make([][]float64, n+1)
@@ -26,13 +27,12 @@ func (r *FloydWarshall) Run(matrix [][]float64) ([][]float64, error) {
 		}
 	}
 
-	//
+	// O(n^2) time
 	for i := 1; i < n+1; i++ {
 		for j := 1; j < n+1; j++ {
 			r.shortest[0][i][j] = matrix[i-1][j-1]
 		}
 	}
-	// fmt.Println(r.shortest[0])
 
 	// O(n^3) time
 	for x := 1; x < n+1; x++ {
