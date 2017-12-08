@@ -54,13 +54,11 @@
 			<div id="nav">
 				<select id="files">
 				
-				<option value="file0">PAM\example.go (0.0%)</option>
+				<option value="file0">PAM\floyd_warshall.go (100.0%)</option>
 				
-				<option value="file1">PAM\floyd_warshall.go (100.0%)</option>
+				<option value="file1">PAM\init.go (100.0%)</option>
 				
-				<option value="file2">PAM\init.go (100.0%)</option>
-				
-				<option value="file3">PAM\pam.go (100.0%)</option>
+				<option value="file2">PAM\pam.go (100.0%)</option>
 				
 				</select>
 			</div>
@@ -80,107 +78,21 @@ import (
         "fmt"
 )
 
-func main() <span class="cov0" title="0">{
-        reader := new(FileReader)
-        reader.FileNameIn = string("test_data/in3.txt")   // входной файл
-        reader.FileNameOut = string("test_data/out3.txt") // выходной файл
-        bytes, _ := reader.Read()
-        reader.Unpack(bytes)
-
-        fw := new(FloydWarshall)
-        matr, _ := fw.Run(reader.Matrix)
-
-        pam := new(PAM)
-        pam.Kmax = reader.Kmax
-        pam.Distances = matr
-
-        clust, ff := pam.swap(1)
-        visuality := make(map[int][]int, len(clust))
-        i := 1
-        for _, val := range clust </span><span class="cov0" title="0">{
-                visuality[i] = make([]int, 0, len(val))
-                for _, node := range val </span><span class="cov0" title="0">{
-                        visuality[i] = append(visuality[i], node+1)
-                }</span>
-                <span class="cov0" title="0">i++</span>
-        }
-        <span class="cov0" title="0">fmt.Println(visuality, ff)
-
-        clust, ff = pam.swap(2)
-        visuality = make(map[int][]int, len(clust))
-        i = 1
-        for _, val := range clust </span><span class="cov0" title="0">{
-                visuality[i] = make([]int, 0, len(val))
-                for _, node := range val </span><span class="cov0" title="0">{
-                        visuality[i] = append(visuality[i], node+1)
-                }</span>
-                <span class="cov0" title="0">i++</span>
-        }
-        <span class="cov0" title="0">fmt.Println(visuality, ff)
-
-        clust, ff = pam.swap(3)
-        visuality = make(map[int][]int, len(clust))
-        i = 1
-        for _, val := range clust </span><span class="cov0" title="0">{
-                visuality[i] = make([]int, 0, len(val))
-                for _, node := range val </span><span class="cov0" title="0">{
-                        visuality[i] = append(visuality[i], node+1)
-                }</span>
-                <span class="cov0" title="0">i++</span>
-        }
-        <span class="cov0" title="0">fmt.Println(visuality, ff)
-
-        clust, ff = pam.swap(4)
-        visuality = make(map[int][]int, len(clust))
-        i = 1
-        for _, val := range clust </span><span class="cov0" title="0">{
-                visuality[i] = make([]int, 0, len(val))
-                for _, node := range val </span><span class="cov0" title="0">{
-                        visuality[i] = append(visuality[i], node+1)
-                }</span>
-                <span class="cov0" title="0">i++</span>
-        }
-        <span class="cov0" title="0">fmt.Println(visuality, ff)
-
-        clust, ff = pam.swap(5)
-        visuality = make(map[int][]int, len(clust))
-        i = 1
-        for _, val := range clust </span><span class="cov0" title="0">{
-                visuality[i] = make([]int, 0, len(val))
-                for _, node := range val </span><span class="cov0" title="0">{
-                        visuality[i] = append(visuality[i], node+1)
-                }</span>
-                <span class="cov0" title="0">i++</span>
-        }
-        <span class="cov0" title="0">fmt.Println(visuality, ff)
-
-        clusters, _ := pam.RunPAM()
-        data := reader.Pack(clusters)
-        reader.Write(data)</span>
-        // fmt.Println("\n", visuality, weightFunction)
-}
-</pre>
-		
-		<pre class="file" id="file1" style="display: none">package main
-
-import (
-        "fmt"
-)
-
-// FloydWarshall алгоритм Флойда-Уоршелла, поиск кротчайших путей между всеми парами вершин
+// FloydWarshall алгоритм Флойда-Уоршелла,
+// поиск кротчайших путей между всеми парами вершин
 type FloydWarshall struct {
         shortest [][][]float64
 }
 
-// Run - поиска кротчайших путей
+// Run - процедура поиска кротчайших путей
 func (r *FloydWarshall) Run(matrix [][]float64) ([][]float64, error) <span class="cov8" title="1">{
         n := len(matrix)
         m := len(matrix[0])
         if n != m </span><span class="cov8" title="1">{
-                return nil, fmt.Errorf("bad news: n != m")
+                return nil, fmt.Errorf("the matrix is not quadratic")
         }</span>
 
-        //
+        // O(n^3) time
         <span class="cov8" title="1">r.shortest = make([][][]float64, n+1)
         for i := 0; i &lt; n+1; i++ </span><span class="cov8" title="1">{
                 r.shortest[i] = make([][]float64, n+1)
@@ -189,13 +101,12 @@ func (r *FloydWarshall) Run(matrix [][]float64) ([][]float64, error) <span class
                 }</span>
         }
 
-        //
+        // O(n^2) time
         <span class="cov8" title="1">for i := 1; i &lt; n+1; i++ </span><span class="cov8" title="1">{
                 for j := 1; j &lt; n+1; j++ </span><span class="cov8" title="1">{
                         r.shortest[0][i][j] = matrix[i-1][j-1]
                 }</span>
         }
-        // fmt.Println(r.shortest[0])
 
         // O(n^3) time
         <span class="cov8" title="1">for x := 1; x &lt; n+1; x++ </span><span class="cov8" title="1">{
@@ -225,7 +136,7 @@ func (r *FloydWarshall) Run(matrix [][]float64) ([][]float64, error) <span class
 }
 </pre>
 		
-		<pre class="file" id="file2" style="display: none">package main
+		<pre class="file" id="file1" style="display: none">package main
 
 import (
         "math"
@@ -267,7 +178,7 @@ func (r *FileReader) Write(data []byte) error <span class="cov8" title="1">{
         }</span>
         <span class="cov8" title="1">defer file.Close()
         file.Write(data)
-        return err</span>
+        return nil</span>
 }
 
 // Pack запаковывает пришедшую мапу кластеров в слайс байт
@@ -317,14 +228,14 @@ func (r *FileReader) Unpack(data []byte) error <span class="cov8" title="1">{
         <span class="cov8" title="1">r.Kmax = k
 
         // достаем списки смежности из файла в формате yaml
-        var allinfo []map[int](map[int]float64)
-        err = yaml.Unmarshal(data[start:], &amp;allinfo)
+        var info []map[int](map[int]float64)
+        err = yaml.Unmarshal(data[start:], &amp;info)
         if err != nil </span><span class="cov8" title="1">{
                 return err
         }</span>
 
         // выделяем место под матрицу смежности n*n
-        <span class="cov8" title="1">n := len(allinfo)
+        <span class="cov8" title="1">n := len(info)
         r.Matrix = make([][]float64, n)
         for i := 0; i &lt; n; i++ </span><span class="cov8" title="1">{
                 r.Matrix[i] = make([]float64, n)
@@ -341,7 +252,7 @@ func (r *FileReader) Unpack(data []byte) error <span class="cov8" title="1">{
         }
 
         // дополняем ее весами ребер
-        <span class="cov8" title="1">for _, adjacency := range allinfo </span><span class="cov8" title="1">{
+        <span class="cov8" title="1">for _, adjacency := range info </span><span class="cov8" title="1">{
                 for node, spisok := range adjacency </span><span class="cov8" title="1">{
                         for friendnode, weight := range spisok </span><span class="cov8" title="1">{
                                 r.Matrix[node-1][friendnode-1] = weight
@@ -353,7 +264,7 @@ func (r *FileReader) Unpack(data []byte) error <span class="cov8" title="1">{
 }
 </pre>
 		
-		<pre class="file" id="file3" style="display: none">package main
+		<pre class="file" id="file2" style="display: none">package main
 
 import (
         "math"
