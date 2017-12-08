@@ -47,6 +47,8 @@ func (r *FileReader) Write(data []byte) error {
 // при этом он сортирует ее по ключам
 func (r *FileReader) Pack(clusters map[int][]int) []byte {
 
+	// Создаем однозначное представление кластеров
+	// для сравнения ожидание/реальность в тестах
 	sortedKeys := make([]int, len(clusters)) // O(Kmax)
 	i := 0
 	for key := range clusters {
@@ -55,8 +57,6 @@ func (r *FileReader) Pack(clusters map[int][]int) []byte {
 	}
 	sort.Slice(sortedKeys, func(i, j int) bool { return sortedKeys[i] < sortedKeys[j] })
 
-	// Создаем однозначное представление кластеров
-	// для сравнения ожидание/реальность в тестах
 	visualClust := make(map[int][]int, len(clusters))
 	i = 1
 	for _, key := range sortedKeys {
@@ -64,6 +64,7 @@ func (r *FileReader) Pack(clusters map[int][]int) []byte {
 		for _, node := range clusters[key] {
 			visualClust[i] = append(visualClust[i], node+1)
 		}
+		sort.Slice(visualClust[i], func(k, j int) bool { return visualClust[i][k] < visualClust[i][j] })
 		i++
 	}
 

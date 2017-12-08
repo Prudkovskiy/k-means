@@ -77,13 +77,13 @@
 		<pre class="file" id="file0" style="display: none">package main
 
 import (
-        "os"
+        "fmt"
 )
 
 func main() <span class="cov0" title="0">{
         reader := new(FileReader)
-        reader.FileNameIn = string(os.Args[1])  // входной файл
-        reader.FileNameOut = string(os.Args[2]) // выходной файл
+        reader.FileNameIn = string("test_data/in3.txt")   // входной файл
+        reader.FileNameOut = string("test_data/out3.txt") // выходной файл
         bytes, _ := reader.Read()
         reader.Unpack(bytes)
 
@@ -94,71 +94,71 @@ func main() <span class="cov0" title="0">{
         pam.Kmax = reader.Kmax
         pam.Distances = matr
 
-        // clust, ff := pam.swap(1)
-        // visuality := make(map[int][]int, len(clust))
-        // i := 1
-        // for _, val := range clust {
-        //         visuality[i] = make([]int, 0, len(val))
-        //         for _, node := range val {
-        //                 visuality[i] = append(visuality[i], node+1)
-        //         }
-        //         i++
-        // }
-        // fmt.Println(visuality, ff)
+        clust, ff := pam.swap(1)
+        visuality := make(map[int][]int, len(clust))
+        i := 1
+        for _, val := range clust </span><span class="cov0" title="0">{
+                visuality[i] = make([]int, 0, len(val))
+                for _, node := range val </span><span class="cov0" title="0">{
+                        visuality[i] = append(visuality[i], node+1)
+                }</span>
+                <span class="cov0" title="0">i++</span>
+        }
+        <span class="cov0" title="0">fmt.Println(visuality, ff)
 
-        // clust, ff = pam.swap(2)
-        // visuality = make(map[int][]int, len(clust))
-        // i = 1
-        // for _, val := range clust {
-        //         visuality[i] = make([]int, 0, len(val))
-        //         for _, node := range val {
-        //                 visuality[i] = append(visuality[i], node+1)
-        //         }
-        //         i++
-        // }
-        // fmt.Println(visuality, ff)
+        clust, ff = pam.swap(2)
+        visuality = make(map[int][]int, len(clust))
+        i = 1
+        for _, val := range clust </span><span class="cov0" title="0">{
+                visuality[i] = make([]int, 0, len(val))
+                for _, node := range val </span><span class="cov0" title="0">{
+                        visuality[i] = append(visuality[i], node+1)
+                }</span>
+                <span class="cov0" title="0">i++</span>
+        }
+        <span class="cov0" title="0">fmt.Println(visuality, ff)
 
-        // clust, ff = pam.swap(3)
-        // visuality = make(map[int][]int, len(clust))
-        // i = 1
-        // for _, val := range clust {
-        //         visuality[i] = make([]int, 0, len(val))
-        //         for _, node := range val {
-        //                 visuality[i] = append(visuality[i], node+1)
-        //         }
-        //         i++
-        // }
-        // fmt.Println(visuality, ff)
+        clust, ff = pam.swap(3)
+        visuality = make(map[int][]int, len(clust))
+        i = 1
+        for _, val := range clust </span><span class="cov0" title="0">{
+                visuality[i] = make([]int, 0, len(val))
+                for _, node := range val </span><span class="cov0" title="0">{
+                        visuality[i] = append(visuality[i], node+1)
+                }</span>
+                <span class="cov0" title="0">i++</span>
+        }
+        <span class="cov0" title="0">fmt.Println(visuality, ff)
 
-        // clust, ff = pam.swap(4)
-        // visuality = make(map[int][]int, len(clust))
-        // i = 1
-        // for _, val := range clust {
-        //         visuality[i] = make([]int, 0, len(val))
-        //         for _, node := range val {
-        //                 visuality[i] = append(visuality[i], node+1)
-        //         }
-        //         i++
-        // }
-        // fmt.Println(visuality, ff)
+        clust, ff = pam.swap(4)
+        visuality = make(map[int][]int, len(clust))
+        i = 1
+        for _, val := range clust </span><span class="cov0" title="0">{
+                visuality[i] = make([]int, 0, len(val))
+                for _, node := range val </span><span class="cov0" title="0">{
+                        visuality[i] = append(visuality[i], node+1)
+                }</span>
+                <span class="cov0" title="0">i++</span>
+        }
+        <span class="cov0" title="0">fmt.Println(visuality, ff)
 
-        // clust, ff = pam.swap(5)
-        // visuality = make(map[int][]int, len(clust))
-        // i = 1
-        // for _, val := range clust {
-        //         visuality[i] = make([]int, 0, len(val))
-        //         for _, node := range val {
-        //                 visuality[i] = append(visuality[i], node+1)
-        //         }
-        //         i++
-        // }
-        // fmt.Println(visuality, ff)
+        clust, ff = pam.swap(5)
+        visuality = make(map[int][]int, len(clust))
+        i = 1
+        for _, val := range clust </span><span class="cov0" title="0">{
+                visuality[i] = make([]int, 0, len(val))
+                for _, node := range val </span><span class="cov0" title="0">{
+                        visuality[i] = append(visuality[i], node+1)
+                }</span>
+                <span class="cov0" title="0">i++</span>
+        }
+        <span class="cov0" title="0">fmt.Println(visuality, ff)
 
         clusters, _ := pam.RunPAM()
         data := reader.Pack(clusters)
-        reader.Write(data)
+        reader.Write(data)</span>
         // fmt.Println("\n", visuality, weightFunction)
-}</span>
+}
 </pre>
 		
 		<pre class="file" id="file1" style="display: none">package main
@@ -274,6 +274,8 @@ func (r *FileReader) Write(data []byte) error <span class="cov8" title="1">{
 // при этом он сортирует ее по ключам
 func (r *FileReader) Pack(clusters map[int][]int) []byte <span class="cov8" title="1">{
 
+        // Создаем однозначное представление кластеров
+        // для сравнения ожидание/реальность в тестах
         sortedKeys := make([]int, len(clusters)) // O(Kmax)
         i := 0
         for key := range clusters </span><span class="cov8" title="1">{
@@ -282,8 +284,6 @@ func (r *FileReader) Pack(clusters map[int][]int) []byte <span class="cov8" titl
         }</span>
         <span class="cov8" title="1">sort.Slice(sortedKeys, func(i, j int) bool </span><span class="cov8" title="1">{ return sortedKeys[i] &lt; sortedKeys[j] }</span>)
 
-        // Создаем однозначное представление кластеров
-        // для сравнения ожидание/реальность в тестах
         <span class="cov8" title="1">visualClust := make(map[int][]int, len(clusters))
         i = 1
         for _, key := range sortedKeys </span><span class="cov8" title="1">{
@@ -291,6 +291,7 @@ func (r *FileReader) Pack(clusters map[int][]int) []byte <span class="cov8" titl
                 for _, node := range clusters[key] </span><span class="cov8" title="1">{
                         visualClust[i] = append(visualClust[i], node+1)
                 }</span>
+                <span class="cov8" title="1">sort.Slice(visualClust[i], func(k, j int) bool </span><span class="cov8" title="1">{ return visualClust[i][k] &lt; visualClust[i][j] }</span>)
                 <span class="cov8" title="1">i++</span>
         }
 

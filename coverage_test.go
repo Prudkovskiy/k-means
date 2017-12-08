@@ -14,9 +14,10 @@ type TestCase struct {
 func TestInit(t *testing.T) {
 	cases := []TestCase{
 		TestCase{"test_data/notExist.txt", "", "_"},
-		TestCase{"test_data/in.txt", "test_data/out.txt", "_"},
+		TestCase{"test_data/in1.txt", "test_data/echo.txt", "_"},
 		TestCase{"test_data/badKmax.txt", "_", "_"},
 		TestCase{"test_data/badYAML.txt", "_", "_"},
+		TestCase{"test_data/badGraph.txt", "_", "_"},
 	}
 
 	reader := new(FileReader)
@@ -56,6 +57,13 @@ func TestInit(t *testing.T) {
 	if err == nil {
 		t.Errorf("[3] your data in input file not yaml format")
 	}
+
+	reader.FileNameIn = cases[4].fileNameIn
+	b, err = reader.Read()
+	err = reader.Unpack(b)
+	if err == nil {
+		t.Errorf("[4] double defined edge")
+	}
 }
 
 func TestFloydWarshall(t *testing.T) {
@@ -69,25 +77,25 @@ func TestFloydWarshall(t *testing.T) {
 
 func TestPAM(t *testing.T) {
 	cases := []TestCase{
-		TestCase{"test_data/in1.txt", "out1.txt",
+		TestCase{"test_data/in1.txt", "test_data/out1.txt",
 			`1:
-- 3
 - 1
 - 2
+- 3
 2:
-- 5
 - 4
+- 5
 - 6
 `,
 		},
-		TestCase{"test_data/in2.txt", "out2.txt",
+		TestCase{"test_data/in2.txt", "test_data/out2.txt",
 			`1:
-- 3
 - 1
 - 2
+- 3
 2:
-- 5
 - 4
+- 5
 - 6
 3:
 - 7
@@ -95,6 +103,25 @@ func TestPAM(t *testing.T) {
 - 9
 4:
 - 10
+`,
+		},
+		TestCase{"test_data/in3.txt", "test_data/out3.txt",
+			`1:
+- 1
+- 2
+- 3
+- 4
+2:
+- 5
+- 6
+3:
+- 7
+- 8
+- 9
+4:
+- 10
+5:
+- 11
 `,
 		},
 	}
@@ -116,10 +143,10 @@ func TestPAM(t *testing.T) {
 
 		clusters, _ := pam.RunPAM()
 		data := reader.Pack(clusters)
-		// reader.Write(data)
+		reader.Write(data)
 
 		if !reflect.DeepEqual(data, []byte(item.expectedResult)) {
-			t.Errorf("[%d] wrong results: got \n%+v expected \n%+v",
+			t.Errorf("[%d] wrong results: got \n%+v \nexpected \n%+v",
 				caseNum, string(data), item.expectedResult)
 		}
 	}
