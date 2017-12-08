@@ -13,10 +13,10 @@ type TestCase struct {
 
 func TestInit(t *testing.T) {
 	cases := []TestCase{
-		TestCase{"test_data/notExist.txt", "", "_"},
-		TestCase{"test_data/in1.txt", "test_data/echo.txt", "_"},
-		TestCase{"test_data/badKmax.txt", "_", "_"},
-		TestCase{"test_data/badYAML.txt", "_", "_"},
+		TestCase{"test_data/notExist.dat", "", "_"},
+		TestCase{"test_data/test.dat", "test_data/test.ans", "_"},
+		TestCase{"test_data/badKmax.dat", "_", "_"},
+		TestCase{"test_data/badYAML.dat", "_", "_"},
 	}
 
 	reader := new(FileReader)
@@ -69,7 +69,7 @@ func TestFloydWarshall(t *testing.T) {
 
 func TestPAM(t *testing.T) {
 	cases := []TestCase{
-		TestCase{"test_data/in1.txt", "test_data/out1.txt",
+		TestCase{"test_data/test1.dat", "test_data/test1.ans",
 			`1:
 - 1
 - 2
@@ -80,7 +80,7 @@ func TestPAM(t *testing.T) {
 - 6
 `,
 		},
-		TestCase{"test_data/in2.txt", "test_data/out2.txt",
+		TestCase{"test_data/test2.dat", "test_data/test2.ans",
 			`1:
 - 1
 - 2
@@ -97,7 +97,7 @@ func TestPAM(t *testing.T) {
 - 10
 `,
 		},
-		TestCase{"test_data/in3.txt", "test_data/out3.txt",
+		TestCase{"test_data/test3.dat", "test_data/test3.ans",
 			`1:
 - 1
 - 2
