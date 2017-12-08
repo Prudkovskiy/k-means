@@ -17,7 +17,6 @@ func TestInit(t *testing.T) {
 		TestCase{"test_data/in1.txt", "test_data/echo.txt", "_"},
 		TestCase{"test_data/badKmax.txt", "_", "_"},
 		TestCase{"test_data/badYAML.txt", "_", "_"},
-		TestCase{"test_data/badGraph.txt", "_", "_"},
 	}
 
 	reader := new(FileReader)
@@ -56,13 +55,6 @@ func TestInit(t *testing.T) {
 	err = reader.Unpack(b)
 	if err == nil {
 		t.Errorf("[3] your data in input file not yaml format")
-	}
-
-	reader.FileNameIn = cases[4].fileNameIn
-	b, err = reader.Read()
-	err = reader.Unpack(b)
-	if err == nil {
-		t.Errorf("[4] double defined edge")
 	}
 }
 
