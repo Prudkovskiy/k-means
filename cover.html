@@ -58,7 +58,9 @@
 				
 				<option value="file1">PAM\init.go (100.0%)</option>
 				
-				<option value="file2">PAM\pam.go (100.0%)</option>
+				<option value="file2">PAM\main.go (0.0%)</option>
+				
+				<option value="file3">PAM\pam.go (100.0%)</option>
 				
 				</select>
 			</div>
@@ -139,6 +141,7 @@ func (r *FloydWarshall) Run(matrix [][]float64) ([][]float64, error) <span class
 		<pre class="file" id="file1" style="display: none">package main
 
 import (
+        "fmt"
         "math"
         "os"
         "sort"
@@ -236,7 +239,12 @@ func (r *FileReader) Unpack(data []byte) error <span class="cov8" title="1">{
 
         // выделяем место под матрицу смежности n*n
         <span class="cov8" title="1">n := len(info)
-        r.Matrix = make([][]float64, n)
+
+        if n &lt; r.Kmax </span><span class="cov8" title="1">{
+                return fmt.Errorf("uncorrect: Kmax &gt; number of nodes in your graph")
+        }</span>
+
+        <span class="cov8" title="1">r.Matrix = make([][]float64, n)
         for i := 0; i &lt; n; i++ </span><span class="cov8" title="1">{
                 r.Matrix[i] = make([]float64, n)
         }</span>
@@ -265,6 +273,48 @@ func (r *FileReader) Unpack(data []byte) error <span class="cov8" title="1">{
 </pre>
 		
 		<pre class="file" id="file2" style="display: none">package main
+
+func main() <span class="cov0" title="0">{
+        // reader := new(FileReader)
+        // if len(os.Args) != 3 {
+        //         fmt.Println("you have not entered the input or output files")
+        //         return
+        // }
+        // reader.FileNameIn = string(os.Args[1])  // входной файл
+        // reader.FileNameOut = string(os.Args[2]) // выходной файл
+        // bytes, err := reader.Read()
+        // if err != nil {
+        //         fmt.Println("something go wrong: ", err)
+        //         return
+        // }
+        // err = reader.Unpack(bytes)
+        // if err != nil {
+        //         fmt.Println("something go wrong: ", err)
+        //         return
+        // }
+
+        // fw := new(FloydWarshall)
+        // matr, err := fw.Run(reader.Matrix)
+        // if err != nil {
+        //         fmt.Println("something go wrong: ", err)
+        //         return
+        // }
+
+        // pam := new(PAM)
+        // pam.Kmax = reader.Kmax
+        // pam.Distances = matr
+
+        // clusters, _ := pam.RunPAM()
+        // data := reader.Pack(clusters)
+        // err = reader.Write(data)
+        // if err != nil {
+        //         fmt.Println("something go wrong: ", err)
+        //         return
+        // }
+}</span>
+</pre>
+		
+		<pre class="file" id="file3" style="display: none">package main
 
 import (
         "math"
@@ -384,7 +434,6 @@ func (p *PAM) swap(k int) (map[int][]int, float64) <span class="cov8" title="1">
                                         inf := []int{notMedIdx, notMed, med}
                                         var inform = map[float64][]int{sum: inf}
                                         out &lt;- inform
-                                        // fmt.Println("go finish, chan: ", out, "wight_function", sum)
                                 }</span>(ch, notMedIdx, notMedoid, medoid)
                         }
                         <span class="cov8" title="1">wg.Wait()
@@ -441,6 +490,16 @@ func (p *PAM) RunPAM() (map[int][]int, float64) <span class="cov8" title="1">{
                         optimalWeightFunc = currWeightFunc
                 }</span>
                 <span class="cov8" title="1">predClusters, predWeightFunc = currClusters, currWeightFunc</span>
+        }
+        // если алгоритм дошел до Kmax-1, то надо проверить,
+        // не будет ли оптимальнее разбить на Kmax,
+        // то есть сравнить значения целевых функций
+        <span class="cov8" title="1">if len(optimalClusters) == p.Kmax-1 </span><span class="cov8" title="1">{
+                currClusters, currWeightFunc = p.swap(p.Kmax)
+                if currWeightFunc &lt; optimalWeightFunc </span><span class="cov8" title="1">{
+                        optimalClusters = currClusters
+                        optimalWeightFunc = currWeightFunc
+                }</span>
         }
         <span class="cov8" title="1">return optimalClusters, optimalWeightFunc</span>
 }

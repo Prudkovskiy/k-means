@@ -15,8 +15,9 @@ func TestInit(t *testing.T) {
 	cases := []TestCase{
 		TestCase{"test_data/notExist.dat", "", "_"},
 		TestCase{"test_data/test.dat", "test_data/test.ans", "_"},
-		TestCase{"test_data/badKmax.dat", "_", "_"},
+		TestCase{"test_data/badKmax1.dat", "_", "_"},
 		TestCase{"test_data/badYAML.dat", "_", "_"},
+		TestCase{"test_data/badKmax2.dat", "_", "_"},
 	}
 
 	reader := new(FileReader)
@@ -55,6 +56,13 @@ func TestInit(t *testing.T) {
 	err = reader.Unpack(b)
 	if err == nil {
 		t.Errorf("[3] your data in input file not yaml format")
+	}
+
+	reader.FileNameIn = cases[4].fileNameIn
+	b, err = reader.Read()
+	err = reader.Unpack(b)
+	if err == nil {
+		t.Errorf("[4] uncorrect: Kmax > number of nodes in your graph")
 	}
 }
 
@@ -114,6 +122,16 @@ func TestPAM(t *testing.T) {
 - 10
 5:
 - 11
+`,
+		},
+		TestCase{"test_data/test4.dat", "test_data/test4.ans",
+			`1:
+- 1
+- 2
+- 4
+- 5
+2:
+- 3
 `,
 		},
 	}

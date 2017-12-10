@@ -118,7 +118,6 @@ func (p *PAM) swap(k int) (map[int][]int, float64) {
 					inf := []int{notMedIdx, notMed, med}
 					var inform = map[float64][]int{sum: inf}
 					out <- inform
-					// fmt.Println("go finish, chan: ", out, "wight_function", sum)
 				}(ch, notMedIdx, notMedoid, medoid)
 			}
 			wg.Wait()
@@ -175,6 +174,16 @@ func (p *PAM) RunPAM() (map[int][]int, float64) {
 			optimalWeightFunc = currWeightFunc
 		}
 		predClusters, predWeightFunc = currClusters, currWeightFunc
+	}
+	// если алгоритм дошел до Kmax-1, то надо проверить,
+	// не будет ли оптимальнее разбить на Kmax,
+	// то есть сравнить значения целевых функций
+	if len(optimalClusters) == p.Kmax-1 {
+		currClusters, currWeightFunc = p.swap(p.Kmax)
+		if currWeightFunc < optimalWeightFunc {
+			optimalClusters = currClusters
+			optimalWeightFunc = currWeightFunc
+		}
 	}
 	return optimalClusters, optimalWeightFunc
 }

@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"math"
 	"os"
 	"sort"
@@ -98,6 +99,11 @@ func (r *FileReader) Unpack(data []byte) error {
 
 	// выделяем место под матрицу смежности n*n
 	n := len(info)
+
+	if n < r.Kmax {
+		return fmt.Errorf("uncorrect: Kmax > number of nodes in your graph")
+	}
+
 	r.Matrix = make([][]float64, n)
 	for i := 0; i < n; i++ {
 		r.Matrix[i] = make([]float64, n)
