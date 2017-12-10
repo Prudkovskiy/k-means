@@ -14,10 +14,12 @@ type TestCase struct {
 func TestInit(t *testing.T) {
 	cases := []TestCase{
 		TestCase{"test_data/notExist.dat", "", "_"},
-		TestCase{"test_data/test.dat", "test_data/test.ans", "_"},
+		TestCase{"test_data/echo.dat", "test_data/echo.ans", "_"},
 		TestCase{"test_data/badKmax1.dat", "_", "_"},
-		TestCase{"test_data/badYAML.dat", "_", "_"},
 		TestCase{"test_data/badKmax2.dat", "_", "_"},
+		TestCase{"test_data/badJSON.dat", "_", "_"},
+		TestCase{"test_data/badNode1.dat", "_", "_"},
+		TestCase{"test_data/badNode2.dat", "_", "_"},
 	}
 
 	reader := new(FileReader)
@@ -48,21 +50,35 @@ func TestInit(t *testing.T) {
 	b, err = reader.Read()
 	err = reader.Unpack(b)
 	if err == nil {
-		t.Errorf("[2] first line in file (Kmax) not integer")
+		t.Errorf("[2] uncorrect Kmax: first line in file (Kmax) not integer")
 	}
 
 	reader.FileNameIn = cases[3].fileNameIn
 	b, err = reader.Read()
 	err = reader.Unpack(b)
 	if err == nil {
-		t.Errorf("[3] your data in input file not yaml format")
+		t.Errorf("[3] uncorrect Kmax: Kmax > number of nodes in your graph")
 	}
 
 	reader.FileNameIn = cases[4].fileNameIn
 	b, err = reader.Read()
 	err = reader.Unpack(b)
 	if err == nil {
-		t.Errorf("[4] uncorrect: Kmax > number of nodes in your graph")
+		t.Errorf("[4] your data in input file not json format")
+	}
+
+	reader.FileNameIn = cases[5].fileNameIn
+	b, err = reader.Read()
+	err = reader.Unpack(b)
+	if err == nil {
+		t.Errorf("[5] you must type only numerical nodes")
+	}
+
+	reader.FileNameIn = cases[6].fileNameIn
+	b, err = reader.Read()
+	err = reader.Unpack(b)
+	if err == nil {
+		t.Errorf("[6] you must type only numerical friend nodes")
 	}
 }
 
@@ -77,63 +93,9 @@ func TestFloydWarshall(t *testing.T) {
 
 func TestPAM(t *testing.T) {
 	cases := []TestCase{
-		TestCase{"test_data/test1.dat", "test_data/test1.ans",
-			`1:
-- 1
-- 2
-- 3
-2:
-- 4
-- 5
-- 6
-`,
-		},
-		TestCase{"test_data/test2.dat", "test_data/test2.ans",
-			`1:
-- 1
-- 2
-- 3
-2:
-- 4
-- 5
-- 6
-3:
-- 7
-- 8
-- 9
-4:
-- 10
-`,
-		},
-		TestCase{"test_data/test3.dat", "test_data/test3.ans",
-			`1:
-- 1
-- 2
-- 3
-- 4
-2:
-- 5
-- 6
-3:
-- 7
-- 8
-- 9
-4:
-- 10
-5:
-- 11
-`,
-		},
-		TestCase{"test_data/test4.dat", "test_data/test4.ans",
-			`1:
-- 1
-- 2
-- 4
-- 5
-2:
-- 3
-`,
-		},
+		TestCase{"test_data/test1.dat", "test_data/test1.ans", `{"1":[1,2,3],"2":[4,5,6]}`},
+		TestCase{"test_data/test2.dat", "test_data/test2.ans", `{"1":[1,2,4,5],"2":[3]}`},
+		TestCase{"test_data/test3.dat", "test_data/test3.ans", `{"1":[1,2,3,4],"2":[5,6],"3":[7,8,9],"4":[10],"5":[11]}`},
 	}
 
 	reader := new(FileReader)

@@ -58,9 +58,7 @@
 				
 				<option value="file1">PAM\init.go (100.0%)</option>
 				
-				<option value="file2">PAM\main.go (0.0%)</option>
-				
-				<option value="file3">PAM\pam.go (100.0%)</option>
+				<option value="file2">PAM\pam.go (100.0%)</option>
 				
 				</select>
 			</div>
@@ -141,13 +139,12 @@ func (r *FloydWarshall) Run(matrix [][]float64) ([][]float64, error) <span class
 		<pre class="file" id="file1" style="display: none">package main
 
 import (
+        "encoding/json"
         "fmt"
         "math"
         "os"
         "sort"
         "strconv"
-
-        "gopkg.in/yaml.v2"
 )
 
 // FileReader работает с файлом входных данных
@@ -198,18 +195,19 @@ func (r *FileReader) Pack(clusters map[int][]int) []byte <span class="cov8" titl
         }</span>
         <span class="cov8" title="1">sort.Slice(sortedKeys, func(i, j int) bool </span><span class="cov8" title="1">{ return sortedKeys[i] &lt; sortedKeys[j] }</span>)
 
-        <span class="cov8" title="1">visualClust := make(map[int][]int, len(clusters))
+        <span class="cov8" title="1">visualClust := make(map[string][]int, len(clusters))
         i = 1
         for _, key := range sortedKeys </span><span class="cov8" title="1">{
-                visualClust[i] = make([]int, 0, len(clusters[key]))
+                s := strconv.Itoa(i)
+                visualClust[s] = make([]int, 0, len(clusters[key]))
                 for _, node := range clusters[key] </span><span class="cov8" title="1">{
-                        visualClust[i] = append(visualClust[i], node+1)
+                        visualClust[s] = append(visualClust[s], node+1)
                 }</span>
-                <span class="cov8" title="1">sort.Slice(visualClust[i], func(k, j int) bool </span><span class="cov8" title="1">{ return visualClust[i][k] &lt; visualClust[i][j] }</span>)
+                <span class="cov8" title="1">sort.Slice(visualClust[s], func(k, j int) bool </span><span class="cov8" title="1">{ return visualClust[s][k] &lt; visualClust[s][j] }</span>)
                 <span class="cov8" title="1">i++</span>
         }
 
-        <span class="cov8" title="1">data, _ := yaml.Marshal(visualClust)
+        <span class="cov8" title="1">data, _ := json.Marshal(visualClust)
         return data</span>
 }
 
@@ -231,8 +229,8 @@ func (r *FileReader) Unpack(data []byte) error <span class="cov8" title="1">{
         <span class="cov8" title="1">r.Kmax = k
 
         // достаем списки смежности из файла в формате yaml
-        var info []map[int](map[int]float64)
-        err = yaml.Unmarshal(data[start:], &amp;info)
+        var info []map[string](map[string]float64)
+        err = json.Unmarshal(data[start:], &amp;info)
         if err != nil </span><span class="cov8" title="1">{
                 return err
         }</span>
@@ -263,8 +261,16 @@ func (r *FileReader) Unpack(data []byte) error <span class="cov8" title="1">{
         <span class="cov8" title="1">for _, adjacency := range info </span><span class="cov8" title="1">{
                 for node, spisok := range adjacency </span><span class="cov8" title="1">{
                         for friendnode, weight := range spisok </span><span class="cov8" title="1">{
-                                r.Matrix[node-1][friendnode-1] = weight
-                        }</span>
+                                nodeInt, err := strconv.Atoi(node)
+                                if err != nil </span><span class="cov8" title="1">{
+                                        return err
+                                }</span>
+                                <span class="cov8" title="1">friendNodeInt, err := strconv.Atoi(friendnode)
+                                if err != nil </span><span class="cov8" title="1">{
+                                        return err
+                                }</span>
+                                <span class="cov8" title="1">r.Matrix[nodeInt-1][friendNodeInt-1] = weight</span>
+                        }
                 }
         }
 
@@ -273,48 +279,6 @@ func (r *FileReader) Unpack(data []byte) error <span class="cov8" title="1">{
 </pre>
 		
 		<pre class="file" id="file2" style="display: none">package main
-
-func main() <span class="cov0" title="0">{
-        // reader := new(FileReader)
-        // if len(os.Args) != 3 {
-        //         fmt.Println("you have not entered the input or output files")
-        //         return
-        // }
-        // reader.FileNameIn = string(os.Args[1])  // входной файл
-        // reader.FileNameOut = string(os.Args[2]) // выходной файл
-        // bytes, err := reader.Read()
-        // if err != nil {
-        //         fmt.Println("something go wrong: ", err)
-        //         return
-        // }
-        // err = reader.Unpack(bytes)
-        // if err != nil {
-        //         fmt.Println("something go wrong: ", err)
-        //         return
-        // }
-
-        // fw := new(FloydWarshall)
-        // matr, err := fw.Run(reader.Matrix)
-        // if err != nil {
-        //         fmt.Println("something go wrong: ", err)
-        //         return
-        // }
-
-        // pam := new(PAM)
-        // pam.Kmax = reader.Kmax
-        // pam.Distances = matr
-
-        // clusters, _ := pam.RunPAM()
-        // data := reader.Pack(clusters)
-        // err = reader.Write(data)
-        // if err != nil {
-        //         fmt.Println("something go wrong: ", err)
-        //         return
-        // }
-}</span>
-</pre>
-		
-		<pre class="file" id="file3" style="display: none">package main
 
 import (
         "math"

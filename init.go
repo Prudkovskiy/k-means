@@ -1,13 +1,12 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
 	"math"
 	"os"
 	"sort"
 	"strconv"
-
-	"gopkg.in/yaml.v2"
 )
 
 // FileReader работает с файлом входных данных
@@ -58,18 +57,19 @@ func (r *FileReader) Pack(clusters map[int][]int) []byte {
 	}
 	sort.Slice(sortedKeys, func(i, j int) bool { return sortedKeys[i] < sortedKeys[j] })
 
-	visualClust := make(map[int][]int, len(clusters))
+	visualClust := make(map[string][]int, len(clusters))
 	i = 1
 	for _, key := range sortedKeys {
-		visualClust[i] = make([]int, 0, len(clusters[key]))
+		s := strconv.Itoa(i)
+		visualClust[s] = make([]int, 0, len(clusters[key]))
 		for _, node := range clusters[key] {
-			visualClust[i] = append(visualClust[i], node+1)
+			visualClust[s] = append(visualClust[s], node+1)
 		}
-		sort.Slice(visualClust[i], func(k, j int) bool { return visualClust[i][k] < visualClust[i][j] })
+		sort.Slice(visualClust[s], func(k, j int) bool { return visualClust[s][k] < visualClust[s][j] })
 		i++
 	}
 
-	data, _ := yaml.Marshal(visualClust)
+	data, _ := json.Marshal(visualClust)
 	return data
 }
 
@@ -91,8 +91,8 @@ func (r *FileReader) Unpack(data []byte) error {
 	r.Kmax = k
 
 	// достаем списки смежности из файла в формате yaml
-	var info []map[int](map[int]float64)
-	err = yaml.Unmarshal(data[start:], &info)
+	var info []map[string](map[string]float64)
+	err = json.Unmarshal(data[start:], &info)
 	if err != nil {
 		return err
 	}
@@ -123,7 +123,15 @@ func (r *FileReader) Unpack(data []byte) error {
 	for _, adjacency := range info {
 		for node, spisok := range adjacency {
 			for friendnode, weight := range spisok {
-				r.Matrix[node-1][friendnode-1] = weight
+				nodeInt, err := strconv.Atoi(node)
+				if err != nil {
+					return err
+				}
+				friendNodeInt, err := strconv.Atoi(friendnode)
+				if err != nil {
+					return err
+				}
+				r.Matrix[nodeInt-1][friendNodeInt-1] = weight
 			}
 		}
 	}
