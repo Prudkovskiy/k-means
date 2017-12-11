@@ -6,11 +6,11 @@ import (
 )
 
 func main() {
-	reader := new(FileReader)
 	if len(os.Args) != 3 {
 		fmt.Println("you have not entered the input or output files")
 		return
 	}
+	reader := new(FileReader)
 	reader.FileNameIn = string(os.Args[1])  // входной файл
 	reader.FileNameOut = string(os.Args[2]) // выходной файл
 	bytes, err := reader.Read()
@@ -25,11 +25,7 @@ func main() {
 	}
 
 	fw := new(FloydWarshall)
-	matr, err := fw.Run(reader.Matrix)
-	if err != nil {
-		fmt.Println("something go wrong: ", err)
-		return
-	}
+	matr, _ := fw.Run(reader.Matrix)
 
 	pam := new(PAM)
 	pam.Kmax = reader.Kmax
