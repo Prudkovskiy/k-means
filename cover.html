@@ -58,7 +58,9 @@
 				
 				<option value="file1">PAM\init.go (100.0%)</option>
 				
-				<option value="file2">PAM\pam.go (100.0%)</option>
+				<option value="file2">PAM\main.go (0.0%)</option>
+				
+				<option value="file3">PAM\pam.go (100.0%)</option>
 				
 				</select>
 			</div>
@@ -280,6 +282,44 @@ func (r *FileReader) Unpack(data []byte) error <span class="cov8" title="1">{
 		
 		<pre class="file" id="file2" style="display: none">package main
 
+func main() <span class="cov0" title="0">{
+        // if len(os.Args) != 3 {
+        //         fmt.Println("you have not entered the input or output files")
+        //         return
+        // }
+        // reader := new(FileReader)
+        // reader.FileNameIn = string(os.Args[1])  // входной файл
+        // reader.FileNameOut = string(os.Args[2]) // выходной файл
+        // bytes, err := reader.Read()
+        // if err != nil {
+        //         fmt.Println("something go wrong: ", err)
+        //         return
+        // }
+        // err = reader.Unpack(bytes)
+        // if err != nil {
+        //         fmt.Println("something go wrong: ", err)
+        //         return
+        // }
+
+        // fw := new(FloydWarshall)
+        // matr, _ := fw.Run(reader.Matrix)
+
+        // pam := new(PAM)
+        // pam.Kmax = reader.Kmax
+        // pam.Distances = matr
+
+        // clusters, _ := pam.RunPAM()
+        // data := reader.Pack(clusters)
+        // err = reader.Write(data)
+        // if err != nil {
+        //         fmt.Println("something go wrong: ", err)
+        //         return
+        // }
+}</span>
+</pre>
+		
+		<pre class="file" id="file3" style="display: none">package main
+
 import (
         "math"
         "math/rand"
@@ -435,36 +475,44 @@ func (p *PAM) swap(k int) (map[int][]int, float64) <span class="cov8" title="1">
 // и разбивает граф на оптимальное число кластеров
 // O(Kmax*O(swap))
 func (p *PAM) RunPAM() (map[int][]int, float64) <span class="cov8" title="1">{
+        optimalClusters := make(map[int][]int)
+        predClusters := make(map[int][]int)
         predClusters, predWeightFunc := p.swap(1)
-        optimalClusters := predClusters
-        optimalWeightFunc := predWeightFunc
-        var currClusters map[int][]int
+        for k, v := range predClusters </span><span class="cov8" title="1">{
+                optimalClusters[k] = v
+        }</span>
+        // optimalClusters := predClusters
+        <span class="cov8" title="1">optimalWeightFunc := predWeightFunc
+        currClusters := make(map[int][]int)
         var currWeightFunc float64
         var nextWeightFunc float64
         var min float64 = 1
 
-        for k := 2; k &lt; p.Kmax; k++ </span><span class="cov8" title="1">{
+        stop := p.Kmax
+        if p.Kmax &lt; len(p.Distances) </span><span class="cov8" title="1">{
+                stop = p.Kmax + 1
+        }</span>
+        <span class="cov8" title="1">for k := 2; k &lt; stop; k++ </span><span class="cov8" title="1">{
+                currClusters = make(map[int][]int)
                 currClusters, currWeightFunc = p.swap(k)
                 _, nextWeightFunc = p.swap(k + 1)
                 optimal := math.Abs(currWeightFunc-nextWeightFunc) /
                         math.Abs(predWeightFunc-currWeightFunc)
                 if optimal &lt; min </span><span class="cov8" title="1">{
                         min = optimal
-                        optimalClusters = currClusters
-                        optimalWeightFunc = currWeightFunc
+                        optimalClusters = make(map[int][]int)
+                        for k, v := range currClusters </span><span class="cov8" title="1">{
+                                optimalClusters[k] = v
+                        }</span>
+                        <span class="cov8" title="1">optimalWeightFunc = currWeightFunc</span>
+                }
+                <span class="cov8" title="1">predClusters = make(map[int][]int)
+                for k, v := range currClusters </span><span class="cov8" title="1">{
+                        predClusters[k] = v
                 }</span>
-                <span class="cov8" title="1">predClusters, predWeightFunc = currClusters, currWeightFunc</span>
+                <span class="cov8" title="1">predWeightFunc = currWeightFunc</span>
         }
-        // если алгоритм дошел до Kmax-1, то надо проверить,
-        // не будет ли оптимальнее разбить на Kmax,
-        // то есть сравнить значения целевых функций
-        <span class="cov8" title="1">if len(optimalClusters) == p.Kmax-1 </span><span class="cov8" title="1">{
-                currClusters, currWeightFunc = p.swap(p.Kmax)
-                if currWeightFunc &lt; optimalWeightFunc </span><span class="cov8" title="1">{
-                        optimalClusters = currClusters
-                        optimalWeightFunc = currWeightFunc
-                }</span>
-        }
+
         <span class="cov8" title="1">return optimalClusters, optimalWeightFunc</span>
 }
 </pre>

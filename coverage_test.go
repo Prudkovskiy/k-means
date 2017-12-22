@@ -94,7 +94,7 @@ func TestFloydWarshall(t *testing.T) {
 func TestPAM(t *testing.T) {
 	cases := []TestCase{
 		TestCase{"test_data/test1.dat", "test_data/test1.ans", `{"1":[1,2,3],"2":[4,5,6]}`},
-		TestCase{"test_data/test2.dat", "test_data/test2.ans", `{"1":[1,2,4,5],"2":[3]}`},
+		TestCase{"test_data/test2.dat", "test_data/test2.ans", `{"1":[1,2,5],"2":[3],"3":[4]}`},
 		TestCase{"test_data/test3.dat", "test_data/test3.ans", `{"1":[1,2,3,4],"2":[5,6],"3":[7,8,9],"4":[10],"5":[11]}`},
 	}
 

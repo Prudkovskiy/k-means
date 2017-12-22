@@ -155,35 +155,43 @@ func (p *PAM) swap(k int) (map[int][]int, float64) {
 // и разбивает граф на оптимальное число кластеров
 // O(Kmax*O(swap))
 func (p *PAM) RunPAM() (map[int][]int, float64) {
+	optimalClusters := make(map[int][]int)
+	predClusters := make(map[int][]int)
 	predClusters, predWeightFunc := p.swap(1)
-	optimalClusters := predClusters
+	for k, v := range predClusters {
+		optimalClusters[k] = v
+	}
+	// optimalClusters := predClusters
 	optimalWeightFunc := predWeightFunc
-	var currClusters map[int][]int
+	currClusters := make(map[int][]int)
 	var currWeightFunc float64
 	var nextWeightFunc float64
 	var min float64 = 1
 
-	for k := 2; k < p.Kmax; k++ {
+	stop := p.Kmax
+	if p.Kmax < len(p.Distances) {
+		stop = p.Kmax + 1
+	}
+	for k := 2; k < stop; k++ {
+		currClusters = make(map[int][]int)
 		currClusters, currWeightFunc = p.swap(k)
 		_, nextWeightFunc = p.swap(k + 1)
 		optimal := math.Abs(currWeightFunc-nextWeightFunc) /
 			math.Abs(predWeightFunc-currWeightFunc)
 		if optimal < min {
 			min = optimal
-			optimalClusters = currClusters
+			optimalClusters = make(map[int][]int)
+			for k, v := range currClusters {
+				optimalClusters[k] = v
+			}
 			optimalWeightFunc = currWeightFunc
 		}
-		predClusters, predWeightFunc = currClusters, currWeightFunc
-	}
-	// если алгоритм дошел до Kmax-1, то надо проверить,
-	// не будет ли оптимальнее разбить на Kmax,
-	// то есть сравнить значения целевых функций
-	if len(optimalClusters) == p.Kmax-1 {
-		currClusters, currWeightFunc = p.swap(p.Kmax)
-		if currWeightFunc < optimalWeightFunc {
-			optimalClusters = currClusters
-			optimalWeightFunc = currWeightFunc
+		predClusters = make(map[int][]int)
+		for k, v := range currClusters {
+			predClusters[k] = v
 		}
+		predWeightFunc = currWeightFunc
 	}
+
 	return optimalClusters, optimalWeightFunc
 }
