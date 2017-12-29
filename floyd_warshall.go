@@ -18,7 +18,6 @@ func (r *FloydWarshall) Run(matrix [][]float64) ([][]float64, error) {
 		return nil, fmt.Errorf("the matrix is not quadratic")
 	}
 
-	// O(n^3) time
 	r.shortest = make([][][]float64, n+1)
 	for i := 0; i < n+1; i++ {
 		r.shortest[i] = make([][]float64, n+1)
